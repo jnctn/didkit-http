@@ -1,0 +1,28 @@
+networks:
+  didkit-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.102.20.0/24
+          gateway: 10.102.20.1
+
+services:
+
+  didkit-http:
+    container_name: didkit-http
+    image: ghcr.io/spruceid/didkit-http:latest
+    env_file: ".env"
+    ports:
+      - "${DIDKIT_HTTP_HTTP_PORT}:${DIDKIT_HTTP_HTTP_PORT}/tcp"
+    dns:
+      - 127.0.0.1
+      - 1.1.1.1
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "http://${IP_ADDR_STRING}:${DIDKIT_HTTP_HTTP_PORT}/healthz" ]
+      interval: 7s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    networks:
+      didkit-net:
+        ipv4_address: ${IP_ADDR_STRING}
