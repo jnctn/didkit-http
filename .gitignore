@@ -1,3 +1,12 @@
 /target
 __pycache__/
+cred
+credential-signed.jsonld
+credential-unsigned.jsonld
+credential-verify-result.json
+issuer_key.jwk
+presentation-signed.jsonld
+presentation-unsigned.jsonld
+presentation-verify-result.json
+verify
 *~

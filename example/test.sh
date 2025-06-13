@@ -16,19 +16,20 @@ print_json() {
 }
 
 didkit_url=http://localhost:3000
+docker_name="didkit-cli"
 
 if [ -e issuer_key.jwk ]; then
     echo 'Using existing keypair.'
 else
-    docker run ghcr.io/spruceid/didkit-cli:latest key generate ed25519 > issuer_key.jwk
+    docker run --name $docker_name --rm ghcr.io/spruceid/didkit-cli:latest key generate ed25519 > issuer_key.jwk
     echo 'Generated keypair.'
 fi
 
-did=$(docker run ghcr.io/spruceid/didkit-cli:latest key to did --jwk $(cat issuer_key.jwk))
+did=$(docker run --name $docker_name --rm ghcr.io/spruceid/didkit-cli:latest key to did --jwk $(cat issuer_key.jwk))
 printf 'DID: %s\n\n' "$did"
 
-verification_method=$(docker run ghcr.io/spruceid/didkit-cli:latest key to verification-method --jwk  $(cat issuer_key.jwk) key)
-printf 'verificationMethod: %s\n\n' "$issuer_verification_method"
+verification_method=$(docker run --name $docker_name --rm ghcr.io/spruceid/didkit-cli:latest key to verification-method --jwk  $(cat issuer_key.jwk) key)
+printf 'verificationMethod: %s\n\n' "$verification_method"
 
 SUBJECTDID='did:example:d23dd687a7dc6787646f2eb98d0'
 ISSUERDID=$did
